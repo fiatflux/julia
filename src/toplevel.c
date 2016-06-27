@@ -710,7 +710,6 @@ JL_DLLEXPORT void jl_method_def(jl_svec_t *argdata, jl_lambda_info_t *f, jl_valu
     jl_sym_t *name;
     jl_method_t *m = NULL;
     JL_GC_PUSH2(&f, &m);
-
     if (!jl_is_lambda_info(f)) {
         // this occurs when there is a closure being added to an out-of-scope function
         // the user should only do this at the toplevel
@@ -722,7 +721,7 @@ JL_DLLEXPORT void jl_method_def(jl_svec_t *argdata, jl_lambda_info_t *f, jl_valu
     assert(jl_is_tuple_type(argtypes));
     assert(jl_is_svec(tvars));
     assert(jl_nparams(argtypes)>0);
-
+    assert(jl_nparams(argtypes) == ((jl_lambda_info_t*)f)->nargs);
     if (jl_is_tuple_type(argtypes) && jl_nparams(argtypes) > 0 && !jl_is_type(jl_tparam0(argtypes)))
         jl_error("function type in method definition is not a type");
     jl_datatype_t *ftype = jl_first_argument_datatype((jl_value_t*)argtypes);

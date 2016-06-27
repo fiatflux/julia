@@ -193,15 +193,16 @@ jl_lambda_info_t *jl_type_infer(jl_lambda_info_t *li, int force)
         (mod != jl_core_module || !lastIn)))) { // avoid any potential recursion in calling jl_typeinf_func on itself
         JL_LOCK(&codegen_lock); // Might GC
         assert(li->inInference == 0);
-        jl_value_t *fargs[2];
+        jl_value_t *fargs[3];
         fargs[0] = (jl_value_t*)jl_typeinf_func;
-        fargs[1] = (jl_value_t*)li;
+        fargs[1] = jl_nothing;
+        fargs[2] = (jl_value_t*)li;
 #ifdef TRACE_INFERENCE
         jl_printf(JL_STDERR,"inference on ");
         jl_static_show_func_sig(JL_STDERR, (jl_value_t*)li->specTypes);
         jl_printf(JL_STDERR, "\n");
 #endif
-        li = (jl_lambda_info_t*)jl_apply(fargs, 2);
+        li = (jl_lambda_info_t*)jl_apply(fargs, 3);
         assert(li->def || li->inInference == 0); // if this is toplevel expr, make sure inference finished
         JL_UNLOCK(&codegen_lock); // Might GC
     }
@@ -1076,6 +1077,7 @@ void JL_NORETURN jl_method_error_bare(jl_function_t *f, jl_value_t *args)
         args
     };
     if (fargs[0]) {
+        abort();
         jl_throw(jl_apply_generic(fargs, 3));
     }
     else {

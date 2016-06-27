@@ -35,6 +35,8 @@ JL_DLLEXPORT jl_module_t *jl_new_module(jl_sym_t *name)
     }
     // export own name, so "using Foo" makes "Foo" itself visible
     jl_set_const(m, name, (jl_value_t*)m);
+    if (jl_core_module)
+        jl_set_const(m, jl_symbol("#context"), jl_get_binding_or_error(jl_core_module, jl_symbol("#context"))->value);
     jl_module_export(m, name);
     JL_GC_POP();
     return m;
@@ -598,7 +600,10 @@ JL_DLLEXPORT void jl_module_run_initializer(jl_module_t *m)
     if (f == NULL)
         return;
     JL_TRY {
-        jl_apply(&f, 1);
+        jl_value_t *args[2];
+        args[0] = f;
+        args[1] = jl_nothing;
+        jl_apply(args, 2);
     }
     JL_CATCH {
         if (jl_initerror_type == NULL) {
