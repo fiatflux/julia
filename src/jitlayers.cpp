@@ -1140,7 +1140,7 @@ void jl_dump_native(const char *bc_fname, const char *obj_fname, const char *sys
     imaging_mode = false;
 }
 
-static int32_t jl_assign_functionID(Function *functionObject, int specsig)
+static int32_t jl_assign_functionID(Function *functionObject)
 {
     // give the function an index in the constant lookup table
     if (!imaging_mode)
