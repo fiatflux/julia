@@ -2476,7 +2476,7 @@ function inlineable(f::ANY, ft::ANY, e::Expr, atypes::Vector{Any}, sv::Inference
             function splitunion(atypes::Vector{Any}, i::Int)
                 if i == 0
                     local sig = argtypes_to_type(atypes)
-                    local li = ccall(:jl_get_spec_lambda, Any, (Any,), sig)
+                    local li = ccall(:jl_get_spec_lambda, Any, (Any,), with_context(sig,sv))
                     li === nothing && return false
                     local stmt = []
                     push!(stmt, Expr(:(=), linfo_var, li))

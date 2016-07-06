@@ -1077,7 +1077,6 @@ void JL_NORETURN jl_method_error_bare(jl_function_t *f, jl_value_t *args)
         args
     };
     if (fargs[0]) {
-        abort();
         jl_throw(jl_apply_generic(fargs, 3));
     }
     else {

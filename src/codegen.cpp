@@ -2760,7 +2760,7 @@ static jl_cgval_t emit_invoke(jl_expr_t *ex, jl_codectx_t *ctx)
         }
     }
     jl_cgval_t result = mark_julia_type(emit_jlcall(prepare_call(jlinvoke_func), boxed(lival, ctx, false),
-                                                    &args[1], nargs, ctx),
+                                                    &args[1], nargs, ctx, true),
                                         true, expr_type((jl_value_t*)ex, ctx), ctx);
     if (result.typ == jl_bottom_type)
         CreateTrap(builder);
