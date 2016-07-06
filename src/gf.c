@@ -1071,13 +1071,14 @@ void jl_method_table_insert(jl_methtable_t *mt, jl_method_t *method, jl_tupletyp
 void JL_NORETURN jl_method_error_bare(jl_function_t *f, jl_value_t *args)
 {
     jl_ptls_t ptls = jl_get_ptls_states();
-    jl_value_t *fargs[3] = {
+    jl_value_t *fargs[4] = {
         (jl_value_t*)jl_methoderror_type,
+        jl_nothing,
         (jl_value_t*)f,
         args
     };
     if (fargs[0]) {
-        jl_throw(jl_apply_generic(fargs, 3));
+        jl_throw(jl_apply_generic(fargs, 4));
     }
     else {
         jl_printf((JL_STREAM*)STDERR_FILENO, "A method error occurred before the base MethodError type was defined. Aborting...\n");
